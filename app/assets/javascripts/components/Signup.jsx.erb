@@ -1,0 +1,144 @@
+var Signup = React.createClass({
+  getInitialState: function() {
+      return {
+        name: '',
+        email: '',
+        date_of_birth: '',
+        data: '',
+        contact_number:'',
+        location: '',
+        blood_group: '',
+        age: '',
+        last_donated_at: '',
+        available_at_night:'',
+        availbility_period: '',
+        password: '',
+       
+      };
+    },
+  handleUserInput (e) {
+      const name = e.target.name;
+      const value = e.target.value;
+      this.setState({[name]: value});
+    },
+    handleSelectInput (e) {
+      const value = e.target.value;
+      this.setState({available_at_night: e.target.value});
+    },
+    handleSelectblood (e) {
+      const value = e.target.value;
+      this.setState({blood_group: e.target.value});
+    },
+    handleClick: function(e) {
+
+    e.preventDefault();
+    $.ajax({
+        url: "/users",
+        dataType: 'json',
+        type: 'POST',
+        data: {users:this.state},
+
+        success: function(data) {
+        this.setState({data: data.result});
+        alert(this.state.data)
+         this.setState({name: '', email: '', date_of_birth: '',
+                       contact_number: '',location: '',blood_group: '',
+                       age: '',last_donated_at: '',available_at_night:'', availbility_period: ''})
+        }.bind(this),
+
+        error: function(response, status, err) {
+        $.each(response.responseJSON, function(bb) {
+        alert(bb +" "+ response.responseJSON[bb][0]);
+          });
+        }
+      });
+  },
+   goBack(){
+   window.history.back();
+ },
+  render:function(){
+        var style = {
+        '#test': {
+            ':hover': {
+                background: '#999'
+            }
+          
+        }
+
+        };
+      var result=this.state.data;
+        return (
+          <div><h4>{result}</h4>
+          <div className="bg1">
+          <div className="login" >
+              <h3 className="login-header">Personal information</h3>
+              <form onSubmit={this.handleClick}>
+                Name:<br/>
+                <input type="text" class="login" name="name" placeholder="Name" value={this.state.name} 
+                onChange={this.handleUserInput}/><br/>
+
+                DOB:<br/>
+                <input type="date" name="date_of_birth" placeholder="Date Of Birth" value={this.state.date_of_birth}
+                onChange={this.handleUserInput}/><br/>
+
+                Email:<br/>
+                <input type="email" name="email" placeholder="Email" value={this.state.email}
+                onChange={this.handleUserInput}/><br/>
+
+                password:<br/>
+                <input type="password" name="password" placeholder="Password" value={this.state.password}
+                onChange={this.handleUserInput}/><br/>
+
+                Phone Number:<br/>
+                <input type="text" name="contact_number" placeholder="Mobile Number" value={this.state.contact_number}
+                onChange={this.handleUserInput}/><br/>
+
+                Availbility Period:<br/>
+                <input type="time" name="availbility_period" value={this.state.availbility_period}
+                onChange={this.handleUserInput}/><br/>
+
+                Location:<br/>
+                <input type="text" name="location" placeholder="Enter Location Name" value={this.state.location}
+                onChange={this.handleUserInput}/><br/>
+
+                Age:<br/>
+                <input type="text" name="age" placeholder="Age" value={this.state.age}
+                onChange={this.handleUserInput}/><br/> 
+
+                Last donated date:<br/>
+                <input type="date" name="last_donated_at" placeholder="Date Of Last donated" value={this.state.last_donated_at}
+                onChange={this.handleUserInput}/><br/>
+
+                Blood Group:<br/>
+                <select  id="dropdown" onChange={this.handleSelectblood}>
+                  <option disabled="disabled" selected="selected">select</option>
+                  <option value="A+">A positive(A+)</option>
+                  <option value="A-">A negative(A-)</option>
+                  <option value="B+">B positive(B+)</option>
+                  <option value="B-">B negative(B-)</option>
+                  <option value="AB+">AB positive(AB+)</option>
+                  <option value="AB-">AB negative(AB-)</option>
+                  <option value="O+">O positive(O+)</option>
+                  <option value="O-">O negative(O-)</option>
+                </select><br/><br/>
+
+                Available night:<br/>
+                <select  id="select" onChange={this.handleSelectInput}>
+                  <option disabled="disabled" selected="selected">select</option>
+                  <option value="true">Yes</option>
+                  <option value="false">No</option>
+                </select><br/><br/>
+                <input 
+                type="submit" 
+                value="Sign Up"
+                className="btn btn-primary"
+              />
+                <input type="button" className="btn btn-primary" onClick={this.goBack} value="Back To Login " />
+              </form>
+            </div>
+          </div>
+          </div>
+        )
+      }
+})
+

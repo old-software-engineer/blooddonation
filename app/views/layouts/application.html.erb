@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title> BLOOD DONOR </title>
+    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+    
+    <%= csrf_meta_tags %>
+
+    <link href="/assets/bootstrap.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/style.css" rel="stylesheet" type="text/css" media="all"/>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=geometry,places"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://unpkg.com/babel-core@5.8.38/browser.min.js"></script>
+    <!--web-fonts-->
+    <!-- <link href='http://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'> -->
+    <!--<script src="/assets/jquery.min.js"></script>-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); }
+    </script>
+    <meta name="keywords" content="My Charity Responsive web template, Bootstrap Web Templates, Flat Web Templates, AndriodCompatible web template, Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyErricsson, Motorola web design" />
+    <!-- start-smoth-scrolling -->
+    <script type="text/javascript" src="/assets/move-top.js"></script>
+    <script type="text/javascript" src="/assets/easing.js"></script>
+    <script type="text/javascript">
+      jQuery(document).ready(function($) {
+        $(".scroll").click(function(event){   
+          event.preventDefault();
+          $('html,body').animate({scrollTop:$(this.hash).offset().top},1000);
+        });
+      });
+    </script>
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  </head>
+
+  <body>
+  <% if user_signed_in? %>
+    Logged in as <strong><%= current_user.email %></strong>.
+     <%#= link_to 'Edit profile', Edit_user_registration_path%> 
+     <%#= link_to "Logout", destroy_user_session_path, method: :delete%>
+  <% end %>
+  <%#= react_component('',
+                      {userSignedIn: user_signed_in?,
+                       presenter: @presenter.to_json}) %>
+  <% if notice %>
+    <p class="alert alert-success"><%= notice %></p>
+  <% end %>
+  <% if alert %>
+    <p class="alert alert-danger"><%= alert %></p>
+  <% end %>
+  <div class="mothergrid">
+  <div class="container">
+    <div class="header">
+      <div class="logo">
+        <a href="<%= root_path %>"> <img src="/assets/logo.png" alt=""/> </a>
+      </div>
+      <span class="menu"> <img src="/assets/icon.png" alt=""/></span>
+      <div class="clear"> </div>
+      <div class="navg">
+        <ul class="res">
+          <li><a class="" href="<%= root_path %>">HOME</a></li>
+          <li><a href="">ABOUT US</a></li>
+          <li><a href="/contacts">ADD CONTACT</a></li>
+          <li><a href="/donors">LOCATE DONORS</a></li>
+          <li><a href="">CONTACT US</a></li>
+          <% if user_signed_in? %>
+            <%#= link_to "Logout", destroy_user_session_path, method: :delete%>
+            <li><a data-method="delete" href="<%= destroy_user_session_path%>">LOGOUT</a></li>
+          <% else %>
+            <li><a href="<%= user_session_path%>">LOGIN / SIGNUP</a></li>
+          <% end %>
+        </ul>
+         <script>
+         $( "span.menu").click(function() {
+            $(  "ul.res" ).slideToggle("slow", function() {
+              });
+          });
+        </script>
+      </div>
+    <div class="clearfix"> </div>
+    </div>
+  </div>
+</div>
+ <%= yield %>
+<div class="footer">
+  <div class="container">
+    <div class="footer-main">
+      <div class="footer-navg">
+        <ul>
+          <li><a class="active" href="<%= root_path %>">HOME</a></li>
+          <li><a href="about.html">ABOUT US</a></li>
+          <li><a href="contact.html">CONTACT US</a></li>
+        </ul>
+      </div>
+
+     <!--  <div class="footer-top">
+        <div class="col-md-4 footer-left">
+          <h3>FOLLOW US</h3>
+        <ul>
+          <li><a href="#"><span class="a"> </span></a></li>
+          <li><a href="#"><span class="b"> </span></a></li>
+          <li><a href="#"><span class="c"> </span></a></li>
+        </ul>
+        </div>
+        <div class="col-md-4 footer-middle">
+          <h3>NEWS LETTER</h3>
+          <input type="text" value="Enter your email" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Enter your email';}"/>
+          <input type="submit" value="Subscribe">
+        </div>
+        <div class="col-md-4 footer-right">
+          <h3>Contact us</h3>
+          <p>Address : Richard McClintock</p>
+          <p>New Street : Letraset sheets</p>
+          <p>ph : 5240-2948-600</p>
+        </div>
+      <div class="clearfix"> </div>
+      </div>
+      <div class="footer-bottom">
+        <p>2014 &copy Template by <a href="http://w3layouts.com/"> W3layouts </a> </p>
+      </div>
+    <div class="clearfix"> </div> -->
+     <!--  <script type="text/javascript">
+                    $(document).ready(function() {
+                      /*
+                      var defaults = {
+                          containerID: 'toTop', // fading element id
+                        containerHoverID: 'toTopHover', // fading element hover id
+                        scrollSpeed: 1200,
+                        easingType: 'linear' 
+                      };
+                      */
+                      
+                      $().UItoTop({ easingType: 'easeOutQuart' });
+                      
+                    });
+                  </script>
+            <a href="#" id="toTop" style="display: block;"> <span id="toTopHover" style="opacity: 1;"> </span></a> -->
+    </div>
+  </div>
+</div>
+   
+</body>
+</html>

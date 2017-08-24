@@ -1,0 +1,93 @@
+var Home = React.createClass({
+    getInitialState: function() {
+          return {
+        events : this.props.data,
+        data:''
+          };
+        },
+    eachuser: function(result,index){
+        return(
+            <ResultItem key={index} user= {result}  handleDelete={this.handleDelete} handleUpdate={this.handleUpdate}/>
+         )
+    },
+    
+    handleDelete(id) {
+    $.ajax({
+      method: 'DELETE',
+      url: '/home/'+id,
+      success:(result) => {
+        alert("deleted successfully")
+        var newUser = this.state.events.filter((user) => { return user.id != id; });
+        this.setState({ events: newUser, data: result.result });
+      },
+      error: function(xhr, status, error) {
+        alert('Cannot delete requested record: ', error);}
+        });
+    }, 
+   
+   handleUpdate(users){
+   $.ajax({
+      method: 'PATCH',
+      url: '/home/'+users.id,
+      data: {
+      users
+      },
+      success:(result) => {
+        alert("Update successfully")
+      var UpdateUser = this.state.events.filter((user) => { return user.id != users.id; });
+
+      UpdateUser.push(id);
+      this.setState({ events: UpdateUser, data: result.result });
+      },
+      error: function(xhr, status, error) {
+        alert('Cannot Updated requested record: ', error);}
+        });
+   },
+  render: function() {
+   var result;
+   let bgColor = "red";
+  console.log(Array.isArray(this.state.events));
+  if(Array.isArray(this.state.events)){
+  		result = this.state.events.map(this.eachuser)
+    } else{
+        result=(
+        <ResultItem key={this.state.events.id} user={this.state.events} handleDeleteitem={this.handleDelete} handleUpdate={this.handleUpdate}/>)
+    }
+
+    var style=
+    {
+    textAlign: 'center',
+    fontWeight: 'bold',
+    fontSize: 18,
+    backgroundColor: '#6495ED'
+    }
+    return(
+      <div className="row">
+        <div className="col-md-12">
+          <h1>{this.state.data}</h1>
+          <table className="table table-bordered">
+          	<caption style={style}>Show User</caption>
+              <thead>
+                <tr>
+                  <th className="col-md-4">Name</th>
+                  <th>Email</th>
+                  <th>Contact Number</th>
+                  <th>Date Of Birth</th>
+                  <th>Age</th>
+                  <th>Location</th>
+                  <th>Blood Group</th>
+                  <th>Available Time</th>
+                  <th>Last Donated Time</th>
+                  <th>Available At Night</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                   {result}
+              </tbody>
+          </table>
+        </div>
+      </div>
+    );
+  }
+});

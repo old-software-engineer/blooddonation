@@ -1,0 +1,166 @@
+var Contacts = React.createClass({
+  getInitialState: function() {
+      return {
+        date: '',
+        name: '',
+        email: '',
+        date_of_birth: '',
+        contact_number:'',
+        location: '',
+        blood_group: '',
+        age: '',
+        last_donated_at: '',
+        available_at_night:'',
+        available_from: '',
+        available_to: '',
+        longitude: '',
+        latitude: '',
+        contacts: this.props.data
+      };
+    },
+
+  handleUserInput (e) {
+    const name = e.target.name;
+    const value = e.target.value;
+    this.setState({[name]: value});
+  },
+
+  handleSelectInput (e) {
+    const value = e.target.value;
+    this.setState({available_at_night: e.target.value});
+  },
+    
+  handleSelectblood (e) {
+    const value = e.target.value;
+    this.setState({blood_group: e.target.value});
+  },
+  
+  handleClick: function(e) {
+    e.preventDefault();
+    $.ajax({
+        url: "/contacts",
+        dataType: 'json',
+        type: 'POST',
+        data: {contact: this.state},
+
+        success: function(data) {
+          debugger
+          this.setState({data: data.result});
+          alert(this.state.data)
+          this.setState({name: '', email: '', 
+                          date_of_birth:'',contact_number: '',location: '', blood_group: '',age:'', last_donated_at:'', available_at_night:'', available_from: '', available_to: '',longitude: '', latitude: '', 
+                        })
+        }.bind(this),
+
+        error: function(response, status, err) {
+          $.each(response.responseJSON, function(bb){
+            alert(bb +" "+ response.responseJSON[bb][0]);
+          });
+        }
+      });
+  },
+  goBack(){
+    window.history.back();
+  },
+  onMapClick(long, lat){
+    this.setState({
+      longitude: long,
+      latitude: lat
+    });
+  },
+  
+  render:function(){
+    var style = {
+      '#test': {
+          ':hover': {
+              background: '#999'
+          }
+      }
+    };
+    return (
+      <div> 
+        <div className="row" id="contact_form">
+          <h3 className="login-header">Add Contacts</h3>
+          <div className="container">
+            <div className="col-md-8 bg_body" >
+              <div className="panel">
+                <form onSubmit={this.handleClick}>
+                  <div className="form-group">
+                    <div className="field">
+                      <label>Name</label><br/>
+                      <input type="text" name="name" placeholder="Name" value={this.state.name} className="form-control" onChange={this.handleUserInput}/><br/>
+                    </div>
+                    
+                    <div className="field">
+                      <label>DOB</label><br/>
+                      <input type="date" name="date_of_birth" placeholder="Date Of Birth" className="form-control" value={this.state.date_of_birth} onChange={this.handleUserInput}/><br/>
+                    </div>
+                    <div className="field">    
+                      <label>Email</label><br/>
+                      <input type="email" name="email" placeholder="Email" value={this.state.email} className="form-control" onChange={this.handleUserInput}/><br/>
+                    </div>  
+                    <div className="field">
+                      <label>Contact Number</label><br/>
+                      <input type="text" name="contact_number" placeholder="Mobile Number" className="form-control" value={this.state.contact_number}
+                      onChange={this.handleUserInput}/><br/>
+                    </div>  
+                    <div className="field">
+                      <label>Availbility Period</label><br/>
+                      <label>Available From</label><br/><input type="time" name="available_from" value={this.state.available_from} className="form-control" onChange={this.handleUserInput}/><br/>
+                      <label>Available To</label><br/><input type="time" name="available_to" value={this.state.available_to} className="form-control" onChange={this.handleUserInput}/><br/>
+                    </div>
+
+                    <div className="field">
+                      <label>City</label><br/>
+                      <input type="text" name="location" placeholder="Enter Location Name" className="form-control" value={this.state.location}
+                      onChange={this.handleUserInput} /><br/>
+                    </div>
+                    <div className="field">  
+                      <label>Age</label><br/>
+                      <input type="text" name="age" placeholder="Age" value={this.state.age} className="form-control"
+                      onChange={this.handleUserInput}/><br/> 
+                    </div>
+                    <div className="field" >  
+                      <label>Last donated date:</label><br/>
+                      <input type="date" name="last_donated_at" placeholder="Date Of Last donated" value={this.state.last_donated_at} className="form-control" onChange={this.handleUserInput}/><br/>
+                    </div>
+                    <div className="field" >
+                      <label>Blood Group:</label><br/>
+                      <select className="form-control" id="dropdown" onChange={this.handleSelectblood}>
+                        <option disabled="disabled">select</option>
+                        <option value="A+">A positive(A+)</option>
+                        <option value="A-">A negative(A-)</option>
+                        <option value="B+">B positive(B+)</option>
+                        <option value="B-">B negative(B-)</option>
+                        <option value="AB+">AB positive(AB+)</option>
+                        <option value="AB-">AB negative(AB-)</option>
+                        <option value="O+">O positive(O+)</option>
+                        <option value="O-">O negative(O-)</option>
+                      </select><br/>
+                    </div>
+                    <div className="field">
+                      <label>Available night:</label><br/>
+                      <select className="form-control"  id="select" onChange={this.handleSelectInput}>
+                        <option disabled="disabled">select</option>
+                        <option value="true">Yes</option>
+                        <option value="false">No</option>
+                      </select><br/>
+                    </div>
+                    <div className="field">
+                      <label>Location:</label><br/>
+                      <MyMap mapClick = {this.onMapClick}/><br/>
+                    </div>
+                    <div className="field">  
+                      <input className="form-control" type="submit" value="Add Contact" className="btn btn-primary"/>
+                      <input className="form-control" type="button" className="btn btn-primary" onClick={this.goBack} value="Click To back page"/>
+                    </div>
+                  </div>  
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>)
+  }
+})
+

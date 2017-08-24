@@ -1,0 +1,33 @@
+var Donors = React.createClass({
+  getInitialState: function() {
+      return {
+        donors: this.props.data
+      };
+    },
+  
+  goBack(){
+    window.history.back();
+  },
+  onMapClick(long, lat){
+    this.setState({
+      longitude: long,
+      latitude: lat
+    });
+  },
+
+  render:function(){
+    return (
+      <div className="row" >
+        <h3 className="login-header">Locate Donors</h3>
+          <div className="container bg_body">
+            <div className="col-md-10">
+              <div className="panel">
+                <MyMap donors = {this.state.donors} />
+              </div>  
+            </div>
+          </div>
+      </div>
+    )
+  }
+})
+

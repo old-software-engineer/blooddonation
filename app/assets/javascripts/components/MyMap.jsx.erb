@@ -1,0 +1,148 @@
+var MyMap = React.createClass({
+
+		getInitialState() {
+	    return { 
+	    	markers: []
+	    };
+	  },
+
+    componentDidMount: function() {
+      this.map = this.createMap()
+      
+      map_obj = this
+
+      var input = document.getElementById('pac-input');
+      var searchBox = new google.maps.places.SearchBox(input);
+      this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+      this.map.addListener('bounds_changed', function() {
+          searchBox.setBounds(map_obj.map.getBounds());
+      });
+
+      searchBox.addListener('places_changed', function() {
+        var places = searchBox.getPlaces();
+
+        if (places.length == 0) {
+          return;
+        }
+
+
+        // For each place, get the icon, name and location.
+        var bounds = new google.maps.LatLngBounds();
+        places.forEach(function(place) {
+          if (!place.geometry) {
+            console.log("Returned place contains no geometry");
+            return;
+          }
+
+          if (place.geometry.viewport) {
+            // Only geocodes have viewport.
+            bounds.union(place.geometry.viewport);
+          } else {
+            bounds.extend(place.geometry.location);
+          }
+        });
+
+        map_obj.map.fitBounds(bounds);
+      });
+
+    	google.maps.event.addListener(this.map, 'click', (event)=> this.handleMapClick(event))
+    },
+
+    createMap: function() {
+	    let mapOptions = {
+	      zoom: 4,
+	      center: { lng: 79.1455078125, lat: 21.82070785387502 }
+	    }
+	    return new google.maps.Map(this.refs.mapCanvas, mapOptions)
+	  },
+
+	  mapCenter: function(e) {
+	    return e.latLng
+	  },
+
+	  createMarker: function(e) {
+	    return new google.maps.Marker({
+	      position: this.mapCenter(e),
+	      map: this.map,
+	      draggable: true,
+  			animation: google.maps.Animation.DROP
+	    })
+		},
+
+    handleMapClick: function(e){
+    	var map = this.map
+
+      if (this.marker != undefined){
+      	this.marker.setMap(null)
+      	if (this.state.markers.length > 0)
+      	{
+      		this.state.markers.forEach(function(marker) {
+					    marker.setMap(null)
+					});
+      	}
+      	this.setState.markers = []
+    	}
+
+    	this.marker = this.createMarker(e);
+      
+      if(this.props.mapClick != undefined){
+        this.setLatLng()
+      }
+      
+      if(this.props.donors != undefined){
+        this.markDonors() 
+      }
+
+    	this.state.markers.push(this.marker)  
+    },
+
+		setLatLng(){
+			this.props.mapClick(this.marker.position.lng(),this.marker.position.lat())
+		},
+    
+    markDonors(){
+      var markers = this.state.markers
+      map_obj = this 
+      this.props.donors.forEach(function(donor) {
+        var p1 = new google.maps.LatLng(parseFloat(donor.latitude),parseFloat(donor.longitude))
+        name = donor.name
+        contact = donor.contact_number
+        var contentString = '<div style="text-align: center;"><b>' + name + '</b><p>' + contact + '</p></div>';
+        if (map_obj.calcDistance(map_obj.marker.getPosition(),p1) <= 5){
+          new_marker = new google.maps.Marker({
+              position: p1,
+              map: map_obj.map,
+              icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png',
+              title: name,
+              animation: google.maps.Animation.DROP
+            })
+
+          var infowindow = new google.maps.InfoWindow({
+            content: contentString
+          });
+          
+          infowindow.open(map, new_marker);
+
+          markers.push(
+            new_marker
+          )
+
+          infowindow = nil 
+          new_marker = nil
+        }      
+      });
+    },
+    calcDistance: function(p1,p2) {
+      return (google.maps.geometry.spherical.computeDistanceBetween(p1, p2) / 1000).toFixed(2);
+    },
+
+    render: function() {
+        return (
+            <div>
+              <input id="pac-input" class="controls" type="text" placeholder="Search Box"/>
+              <div id="map" ref="mapCanvas"><span></span></div>
+            </div>
+        );  
+    }
+});

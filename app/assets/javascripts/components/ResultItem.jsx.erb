@@ -1,0 +1,127 @@
+var ResultItem = React.createClass({
+    getInitialState: function() {
+          return {
+          editing :false,
+          user: this.props.user,
+          name: this.props.user.name,
+          email: this.props.user.email
+          }
+        },
+         
+    handleDelete(id) {
+    this.props.handleDelete(id);
+    },
+    handleUserInput (e) {
+      const name = e.target.name;
+      const value = e.target.value;
+      this.setState({[name]: value});
+    },
+    
+    handleUpdate(){
+    this.setState({editing:false});
+    var id=this.state.user.id;
+    var name = this.state.name;
+    var data={id:id ,name:name}
+    this.props.handleUpdate(data);
+    },
+
+    edit: function(){
+    this.setState({editing:true});
+    },
+     cancel: function(){
+    this.setState({editing:false});
+    },
+     goBack(){
+   window.history.back();
+ },
+    editUser: function(user,bgColor,buttoncolor){
+     if(this.state.editing){
+     return(
+          <tr>
+            <td>
+              <input type="text"  name="name" placeholder="Name" value={this.state.name} onChange={this.handleUserInput}
+              />
+            </td>
+            <td>
+              <input type="email" name="email" placeholder="Email" value={this.state.email}
+              onChange={this.handleUserInput}/><br/>
+            </td>
+            <td>
+              <input type="text" name="contact_number" placeholder="Mobile Number" value={this.state.user.contact_number}
+                onChange={this.handleUserInput}/>
+            </td>
+            <td>
+              <input type="date" name="date_of_birth" placeholder="Date Of Birth" value={this.state.user.date_of_birth}
+                onChange={this.handleUserInput}/>
+            </td>
+            <td>
+              <input type="text" name="age" placeholder="Age" value={this.state.user.age}
+                onChange={this.handleUserInput}/>
+            </td>
+            <td>
+              <input type="text" name="location" placeholder="Enter Location Name" value={this.state.user.location}
+                onChange={this.handleUserInput}/>
+            </td>
+            <td>
+              <select  id="dropdown" onChange={this.handleSelectblood} value={this.state.user.blood_group}>
+                  <option disabled="disabled" selected="selected">select</option>
+                  <option value="A+">A positive(A+)</option>
+                  <option value="A-">A negative(A-)</option>
+                  <option value="B+">B positive(B+)</option>
+                  <option value="B-">B negative(B-)</option>
+                  <option value="AB+">AB positive(AB+)</option>
+                  <option value="AB-">AB negative(AB-)</option>
+                  <option value="O+">O positive(O+)</option>
+                  <option value="O-">O negative(O-)</option>
+                </select>
+            </td>
+            <td>
+              <input type="time" name="availbility_period" value={this.state.user.availbility_period}
+                onChange={this.handleUserInput}/>
+            </td>
+            <td>
+              <input type="date" name="last_donated" placeholder="Date Of Last donated" value={this.state.user.last_donated}
+                onChange={this.handleUserInput}/>
+            </td>
+            <td>
+              <select  id="select" onChange={this.handleSelectInput} value="this.state.user.available_at_night">
+                  <option disabled="disabled" selected="selected">select</option>
+                  <option value="true">Yes</option>
+                  <option value="false">No</option>
+                </select>
+            </td>
+            <td>
+              <button onClick={this.handleUpdate} style={{backgroundColor: "green"}}>Update</button>
+              <button onClick={this.cancel} style={{backgroundColor: "grey"}}>Cancel</button>
+            </td>
+          </tr>
+        )
+     } else{
+        return (
+            <tr>
+                <td>{user.name}</td>
+                <td>{user.email}</td>
+                <td>{user.contact_number}</td>
+                <td>{user.date_of_birth}</td>
+                <td>{user.age}</td>
+                <td>{user.location}</td>
+                <td>{user.blood_group}</td>
+                <td>{user.availbility_period}</td>
+                <td>{user.last_donated_at}</td>
+                <td>{user.available_at_night ? "Yes" : "No"}</td>
+                <td>
+                    <button onClick={this.edit} style={{backgroundColor: buttoncolor}}>Edit</button>
+                    <button onClick={this.handleDelete.bind(this, user.id)} style={{backgroundColor: bgColor}} >Delete</button>
+                </td>
+            </tr>
+        )
+     }
+    },
+    render: function(){
+        var user = this.props.user;
+        let bgColor = "red"
+        let buttoncolor="green"
+        return this.editUser(user,bgColor,buttoncolor);
+        
+    }
+});
