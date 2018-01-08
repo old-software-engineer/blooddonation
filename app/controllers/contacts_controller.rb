@@ -19,6 +19,11 @@ class ContactsController < ApplicationController
       end
 	end
 
+	def all_lat_longitude
+		long_lat = Contact.all.as_json(only: [:longitude , :latitude])
+		render :json => long_lat
+	end
+
 	private
 	def contact_params
 			params.require("contact").permit(:name,:email,:date_of_birth,:contact_number,:location,:blood_group,:age,:last_donated_at,:available_at_night,:available_from,:available_to,:longitude,:latitude)		
